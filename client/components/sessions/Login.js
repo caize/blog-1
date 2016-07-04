@@ -9,36 +9,54 @@ import {
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Subheader from 'material-ui/Subheader';
 
 import {
+	Link,
 	browserHistory
 } from 'react-router';
 
 import {
 	login,
 	loginError
-} from '../actions/login';
+} from '../../actions/login';
 
-import Error from '../common/Error';
+import Error from '../../common/Error';
 
 
 const styles = {
 	login: {
 		margin: '0 auto',
-		padding: 20,
-		marginTop: 5,
+		paddingTop: 0,
+		paddingRight: 20,
+		paddingLeft: 20,
+		paddingBottom: 80,
+		marginTop: 15,
 		maxWidth: 480,
 		minWidth: 320
 	},
 	button: {
 		marginTop: 20,
-		flexDirection: 'end'
+		float: 'right'
 	},
 	textField: {
 		display: 'block',
 		width: '100%',
 		marginTop: -10
 	},
+	enterlink: {
+		fontSize: 14,
+		float: 'left',
+		marginTop: 45,
+		color: '#757575',
+		marginLeft: -70
+	},
+	forget: {
+		fontSize: 14,
+		float: 'left',
+		color: '#757575',
+		marginTop: 20,
+	}
 };
 
 
@@ -62,7 +80,7 @@ class Login extends Component {
 		if (!username) {
 			error = true;
 			this.setState({
-				loginError: "登录名不能为空"
+				loginError: "邮箱/登录名不能为空"
 			})
 		}
 		if (!password || password.length < 6) {
@@ -119,10 +137,11 @@ class Login extends Component {
 
 	render() {
 		return (
+			<div>
 			<Paper zDepth={2} style={styles.login}>
 			  <TextField
-			      hintText="邮箱或用户名"
-			      floatingLabelText="登录名"
+			      hintText="邮箱/登录名"
+			      floatingLabelText="邮箱/登录名"
 			      fullWidth={true}
 			      errorText={this.state.loginError}
 			      ref='username'
@@ -144,8 +163,11 @@ class Login extends Component {
 			    />
 			    <br />
 			    <RaisedButton label="登录" onMouseDown={this.submitFrom.bind(this)} primary={true} style={styles.button} />
+			    <Link style={styles.forget} to="/signup">忘记密码？</Link>
+			    <Link style={styles.enterlink} to="/signup">没有帐号？</Link>
 			    <Error error={this.props.login_error.error} time={this.props.login_error.time} />
 		   </Paper>
+		   </div>
 		)
 	}
 }

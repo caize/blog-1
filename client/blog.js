@@ -19,9 +19,9 @@ injectTapEventPlugin();
 import css from './styles/main.scss';
 
 import Main from './components/Main';
-import Login from './components/Login';
+import Login from './components/sessions/Login';
 import Index from './components/Index';
-import Signup from './components/Signup';
+import Signup from './components/sessions/Signup';
 
 
 import store from './store';

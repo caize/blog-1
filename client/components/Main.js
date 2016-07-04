@@ -25,6 +25,10 @@ const styles = {
 	},
 	title: {
 		cursor: 'pointer',
+	},
+	link: {
+		display: 'block',
+		color: '#212121'
 	}
 }
 
@@ -43,16 +47,16 @@ class Main extends Component {
 		};
 	}
 
-	handleToggle() {
+	handleToggle(e) {
 		this.setState({
 			open: !this.state.open
-		})
+		});
 	}
 
 	handleClose() {
 		this.setState({
 			open: false
-		})
+		});
 	}
 
 	HandleLogout() {
@@ -68,7 +72,6 @@ class Main extends Component {
 			getAuth
 		} = this.props;
 		getAuth();
-
 	}
 
 	render() {
@@ -85,8 +88,8 @@ class Main extends Component {
 			          open={obj}
 			          onRequestChange={(open) => this.setState({open})}
 			        >
-			          <Link to="login"><MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}>{login_user.username}</MenuItem></Link>
-			          <Link to="signup"><MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}>{login_user.email}</MenuItem></Link>
+			          <MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}><Link style={styles.link} to={`/user/${login_user.username}`}>{login_user.username}</Link></MenuItem>
+			          <MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}><Link style={styles.link} to={`/user/${login_user.username}`}>{login_user.email}</Link></MenuItem>
 			          <MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.HandleLogout.bind(this)}>登出</MenuItem>
 			        </Drawer>
 			) : (
@@ -96,9 +99,9 @@ class Main extends Component {
 			          open={obj}
 			          onRequestChange={(open) => this.setState({open})}
 			        >
-			          <Link to="login"><MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}>登录</MenuItem></Link>
-			          <Link to="signup"><MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}>注册</MenuItem></Link>
-			        </Drawer>
+					<MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}><Link style={styles.link} to="/login">登录</Link></MenuItem>
+			        <MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}><Link style={styles.link} to="/signup">注册</Link></MenuItem>
+			     </Drawer>
 			)
 		}
 		return (
@@ -108,7 +111,6 @@ class Main extends Component {
 				    title="Xcasx'S 博客"
 				    titleStyle={styles.title}
 				    onTitleTouchTap = {(obj) => this.pg()}
-				    iconClassNameRight="muidocs-icon-navigation-expand-more"
 				    onLeftIconButtonTouchTap={this.handleToggle.bind(this)}
 				  />
 				  { siderBar(this.state.open) }

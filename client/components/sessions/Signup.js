@@ -5,32 +5,44 @@ import {
 	connect
 } from 'react-redux';
 import {
+	Link,
 	browserHistory
 } from 'react-router';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Subheader from 'material-ui/Subheader';
 
 import {
 	register
-} from '../actions/login';
+} from '../../actions/login';
 
 const styles = {
 	login: {
 		margin: '0 auto',
-		padding: 20,
-		marginTop: 5,
+		paddingTop: 0,
+		paddingRight: 20,
+		paddingLeft: 20,
+		paddingBottom: 80,
+		marginTop: 15,
 		maxWidth: 480,
 		minWidth: 320
 	},
 	button: {
-		marginTop: 20
+		marginTop: 20,
+		float: 'right'
 	},
 	textField: {
 		display: 'block',
 		width: '100%',
 		marginTop: -10
 	},
+	enterlink: {
+		fontSize: 14,
+		float: 'left',
+		marginTop: 30,
+		color: '#757575'
+	}
 };
 
 class Signup extends Component {
@@ -145,6 +157,7 @@ class Signup extends Component {
 
 	render() {
 		return (
+			<div>
 			<Paper zDepth={2} style={styles.login}>
 			  <TextField
 			      hintText="只允许数字、大小写字母和下划线"
@@ -192,7 +205,9 @@ class Signup extends Component {
 			    />
 			    <br />
 			    <RaisedButton label="注册" onMouseDown={this.submitFrom.bind(this)} primary={true} style={styles.button} />
+			    <Link style={styles.enterlink} to="/login">已有帐号！</Link>
 		   </Paper>
+			</div>
 		)
 	}
 }
