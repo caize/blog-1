@@ -1,7 +1,22 @@
 body {
 	margin: 0;
+	// font-family: Calibri, Helvetica, 黑体简, 微软雅黑, 'Helvetica Neue Light', 'Helvetica Neue', sans-serif;
 }
-
 a {
 	text-decoration: none;
+}
+.article {
+	a {
+		color: rgba(0,0,0,0.8);
+	}
+	h3 {
+		margin-bottom: 10px;
+	}
+	small {
+			color: rgba(0,0,0,0.4);
+			a {
+				color: inherit;
+				text-decoration: underline;
+			}
+	}
 }

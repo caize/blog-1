@@ -11,7 +11,6 @@ import {
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import Subheader from 'material-ui/Subheader';
 
 import {
 	register
@@ -94,8 +93,7 @@ class Signup extends Component {
 			})
 		}
 
-		if (error === false) {
-
+		if (!error) {
 			let {
 				register
 			} = this.props;
@@ -144,7 +142,7 @@ class Signup extends Component {
 			reg_error,
 			login_user
 		} = nextProps;
-		if (login_user !== undefined && login_user.token !== undefined) {
+		if (!login_user && !login_user.token) {
 			browserHistory.push('/')
 		}
 		this.setState({
@@ -158,7 +156,7 @@ class Signup extends Component {
 	render() {
 		return (
 			<div>
-			<Paper zDepth={2} style={styles.login}>
+			<Paper zDepth={1} style={styles.login}>
 			  <TextField
 			      hintText="只允许数字、大小写字母和下划线"
 			      floatingLabelText="登录名"

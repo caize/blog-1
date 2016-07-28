@@ -19,10 +19,9 @@ export function getAuth() {
 		if (state.login.login_user.token) {
 			return function() {};
 		}
-		if (token === null || token === undefined || token === "") {
+		if (!token) {
 			dispatch(logout())
 		}
-
 		return fetch(AUTHEN_URL, {
 				method: 'post',
 				headers: new Headers({

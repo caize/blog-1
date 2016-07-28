@@ -7,10 +7,7 @@ import {
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
 import {
-	Link,
 	browserHistory
 } from 'react-router';
 
@@ -19,32 +16,28 @@ import {
 	logout
 } from '../actions/login';
 
+import SideBar from '../common/SideBar';
+
 const styles = {
-	innerDiv: {
-		textDecoration: 'none',
-	},
 	title: {
 		cursor: 'pointer',
-	},
-	link: {
-		display: 'block',
-		color: '#212121'
 	}
 }
 
 class Main extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			open: false
+		};
+	}
+
 	pg() {
 		let pathname = window.location.pathname;
 		if (pathname !== '/') {
 			browserHistory.push('/')
 		}
 		return;
-	}
-	constructor(props) {
-		super(props);
-		this.state = {
-			open: false
-		};
 	}
 
 	handleToggle(e) {
@@ -60,18 +53,24 @@ class Main extends Component {
 	}
 
 	HandleLogout() {
+		this.handleClose();
 		let {
 			logout
 		} = this.props;
-		logout()
-		this.handleClose()
+		logout();
+		this.pg();
 	}
 
-	componentDidMount() {
-		let {
-			getAuth
-		} = this.props;
-		getAuth();
+	dealRequest(open) {
+		this.setState({
+			open: open
+		})
+	}
+	componentWillMount() {
+			let {
+				getAuth
+			} = this.props;
+			getAuth();
 	}
 
 	render() {
@@ -79,41 +78,16 @@ class Main extends Component {
 			loggedIn,
 			login_user
 		} = this.props;
-
-		const siderBar = (obj) => {
-			return loggedIn ? (
-				<Drawer
-			          docked={false}
-			          width={200}
-			          open={obj}
-			          onRequestChange={(open) => this.setState({open})}
-			        >
-			          <MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}><Link style={styles.link} to={`/user/${login_user.username}`}>{login_user.username}</Link></MenuItem>
-			          <MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}><Link style={styles.link} to={`/user/${login_user.username}`}>{login_user.email}</Link></MenuItem>
-			          <MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.HandleLogout.bind(this)}>登出</MenuItem>
-			        </Drawer>
-			) : (
-				<Drawer
-			          docked={false}
-			          width={200}
-			          open={obj}
-			          onRequestChange={(open) => this.setState({open})}
-			        >
-					<MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}><Link style={styles.link} to="/login">登录</Link></MenuItem>
-			        <MenuItem innerDivStyle={styles.innerDiv} onTouchTap={this.handleClose.bind(this)}><Link style={styles.link} to="/signup">注册</Link></MenuItem>
-			     </Drawer>
-			)
-		}
 		return (
 			<MuiThemeProvider muiTheme={getMuiTheme()}>
 				<div>
 				<AppBar
-				    title="Xcasx'S 博客"
+				    title="Xcasx"
 				    titleStyle={styles.title}
 				    onTitleTouchTap = {(obj) => this.pg()}
 				    onLeftIconButtonTouchTap={this.handleToggle.bind(this)}
 				  />
-				  { siderBar(this.state.open) }
+				  <SideBar {...this.props} key="sidebar" HandleLogout={this.HandleLogout.bind(this)} handleClose={this.handleClose.bind(this)} dealRequest={this.dealRequest.bind(this)} open={this.state.open} />
 				  {
 					React.cloneElement(this.props.children, {...this.props})
 				  }
@@ -125,13 +99,19 @@ class Main extends Component {
 
 function mapStateToProps(state) {
 	let loggedIn = false;
+	let admin = false;
 	let login_user = state.login.login_user;
 	if (login_user !== undefined && login_user.token && login_user.username) {
 		loggedIn = true
+		if(login_user.admin) {
+			admin = true
+		}
 	}
 	return {
 		loggedIn: loggedIn,
-		login_user: state.login.login_user
+		admin: admin,
+		login_user: login_user,
+		topics: state.topics
 	}
 }
 

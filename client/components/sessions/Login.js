@@ -9,7 +9,6 @@ import {
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import Subheader from 'material-ui/Subheader';
 
 import {
 	Link,
@@ -138,7 +137,7 @@ class Login extends Component {
 	render() {
 		return (
 			<div>
-			<Paper zDepth={2} style={styles.login}>
+			<Paper zDepth={1} style={styles.login}>
 			  <TextField
 			      hintText="邮箱/登录名"
 			      floatingLabelText="邮箱/登录名"
