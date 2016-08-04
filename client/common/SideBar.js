@@ -40,8 +40,8 @@ class SideBar extends Component {
 			link: "/login",
 			text: "登录"
 		}, {
-			link: "/signup",
-			text: "注册"
+			link: "/about",
+			text: "关于"
 		}]
 	}
 
@@ -61,6 +61,9 @@ class SideBar extends Component {
 		}, {
 			link: this.props.HandleLogout,
 			text: "退出"
+		}, {
+			link: "/about",
+			text: "关于"
 		}]
 	}
 	render() {

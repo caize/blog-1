@@ -63,6 +63,7 @@ class TopicShow extends Component {
 		let {
 			article
 		} = this.props;
+		const editor = this.props.loggedIn ? <span><Link style={{color: "rgba(0,0,0,0.4)", textDecoration: 'underline'}} to={`/articles/${article.id}/edit`}>编辑</Link>  ·</span> : ''
 		const paperArticle = article.title === undefined ? (
 			<h3>没有该文章，请返回继续查看</h3>
 		) : (
@@ -71,6 +72,7 @@ class TopicShow extends Component {
 			<small style={styles.intro}>
 				<Link style={{color: "rgba(0,0,0,0.4)", textDecoration: 'underline'}} to={`/users/${article.author_username}`}>{article.author_username}</Link> ·
 				<Link style={{color: "rgba(0,0,0,0.4)", textDecoration: 'underline'}} to={`/nodes/${article.node_id}`}>{article.node_title}</Link> ·
+					{editor}
 				<TimeAgo date={article.created_at} /></small>
 			<div className="simditor" style={styles.simditor}>
 				<div dangerouslySetInnerHTML={{__html: article.body}} className="simditor-body" style={styles["simditor-body"]} />

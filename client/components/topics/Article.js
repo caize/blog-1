@@ -39,7 +39,7 @@ class Article extends Component {
       <div style={styles.article} className="article">
         <h3><Link to={`/articles/${article.id}`}>{article.title}</Link></h3>
         <small>
-          <Link to={`/users/${article.author_username}`}>{article.author_username}</Link> ·
+          <Link to={`/about`}>{article.author_username}</Link> ·
           <Link to={`/nodes/${article.node_id}`}>{article.node_title}</Link> ·
           <TimeAgo date={article.created_at} /></small>
         <div dangerouslySetInnerHTML={{__html: this.initArticleBody(article.body)}} style={styles.body} />

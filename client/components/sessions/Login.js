@@ -162,8 +162,8 @@ class Login extends Component {
 			    />
 			    <br />
 			    <RaisedButton label="登录" onMouseDown={this.submitFrom.bind(this)} primary={true} style={styles.button} />
-			    <Link style={styles.forget} to="/signup">忘记密码？</Link>
-			    <Link style={styles.enterlink} to="/signup">没有帐号？</Link>
+			    {/*<Link style={styles.forget} to="/signup">忘记密码？</Link>*/}
+			    {/*<Link style={styles.enterlink} to="/signup">没有帐号？</Link>*/}
 			    <Error error={this.props.login_error.error} time={this.props.login_error.time} />
 		   </Paper>
 		   </div>

@@ -157,7 +157,6 @@ export function fetchNode(id) {
 					})
 				}).then(response => response.json())
 				.then((json) => {
-					console.log("json", json)
 					if (json.error !== "Not Found") {
 						dispatch(receiveNode(json));
 					} else {
@@ -257,11 +256,21 @@ export function nodeError(errors) {
 
 // 添加一篇文章
 export function addTopicToNode(id, article) {
-	console.log("id, article", id);
 	return {
 		type: "add_topic_to_node",
 		payload: {
 			id: id,
+			article: article
+		}
+	}
+}
+
+// 更新一篇文章
+export function updateTopicToNode(id, article) {
+	return {
+		type: "update_topic_to_node",
+		payload: {
+			old_id: id,
 			article: article
 		}
 	}

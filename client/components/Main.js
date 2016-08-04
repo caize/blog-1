@@ -67,10 +67,10 @@ class Main extends Component {
 		})
 	}
 	componentWillMount() {
-			let {
-				getAuth
-			} = this.props;
-			getAuth();
+		let {
+			getAuth
+		} = this.props;
+		getAuth();
 	}
 
 	render() {
@@ -89,7 +89,7 @@ class Main extends Component {
 				  />
 				  <SideBar {...this.props} key="sidebar" HandleLogout={this.HandleLogout.bind(this)} handleClose={this.handleClose.bind(this)} dealRequest={this.dealRequest.bind(this)} open={this.state.open} />
 				  {
-					React.cloneElement(this.props.children, {...this.props})
+					React.cloneElement(this.props.children, ...this.props)
 				  }
 				</div>
 			</MuiThemeProvider>
@@ -103,7 +103,7 @@ function mapStateToProps(state) {
 	let login_user = state.login.login_user;
 	if (login_user !== undefined && login_user.token && login_user.username) {
 		loggedIn = true
-		if(login_user.admin) {
+		if (login_user.admin) {
 			admin = true
 		}
 	}

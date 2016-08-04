@@ -38,6 +38,22 @@ export default function topicsReducer(state = initialState, action) {
 				isSuccess: action.payload.status,
 				articles: Array.from(new Set([action.payload.article, ...state.articles]))
 			});
+		case "update_topic":
+			return Object.assign({}, state, {
+				isFetching: false,
+				isSuccess: "success",
+				article: action.payload.article,
+				articles: state.articles.map(article => {
+										if(article.id === action.payload.article.id) {
+											return action.payload.article;
+										}
+										return article;
+									})
+			});
+		case "is_success":
+			return Object.assign({}, state, {
+				isSuccess: '',
+			});
 		default:
 			return state;
 	}

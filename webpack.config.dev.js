@@ -7,16 +7,21 @@ module.exports = {
 	devtool: 'source-map',
 	entry: [
 		'webpack-hot-middleware/client',
-		'./client/blog.js'
+		path.join(__dirname, 'client/blog.js')
 	],
 	output: {
 		path: path.join(__dirname, 'dist'),
 		filename: 'bundle.js',
-		publicPath: '/static/'
+		publicPath: '/'
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
-		new webpack.NoErrorsPlugin()
+		new webpack.NoErrorsPlugin(),
+		new webpack.DefinePlugin({
+			'process.env': {
+				'NODE_ENV': "'development'"
+			}
+		})
 	],
 	module: {
 		loaders: [{

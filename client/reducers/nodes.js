@@ -62,13 +62,14 @@ export default function nodesReducer(state = initializeState, action) {
 			});
 		case "add_topic_to_node":
 			return fetchNodeToAdd(state, action);
+		case "update_topic_to_node":
+			return updateTopicAndNode(state, action);
 		default:
 			return state;
 	}
 }
 
 function fetchNodeToAdd(state, action) {
-	console.log("state  action", state);
 	var id = action.payload.id;
 	var article = action.payload.article;
 	return Object.assign({}, state, {
@@ -110,4 +111,58 @@ function removeNodeReducer(state, action) {
 	} else {
 		return state;
 	}
+}
+
+function updateTopicAndNode(state, action) {
+		var old_node_id = parseInt(action.payload.old_id);
+		var new_node_id = parseInt(action.payload.article.node_id);
+		var article_id = action.payload.article.id;
+		if(old_node_id===new_node_id){
+		// 如果node_id和article.node_id相同，就找到node下的article替换
+			return Object.assign({}, state, {
+				isRequesting: false,
+				nodes: state.nodes.map(node => {
+					if(new_node_id === node.id){
+						return Object.assign({}, node, {
+							articles: node.articles.map(article => {
+								if(article.id === article_id) {
+									return action.payload.article;
+								}
+								return article;
+							})
+						})
+					}
+					return node;
+				})
+			})
+		}else{
+		// 如果node_id和article.node_id不同，就删除原来node里对应的article,在新的node中添加article
+			return Object.assign({}, state, {
+				isRequesting: false,
+				nodes: state.nodes.map(node => {
+					// 1、在新的node中添加article
+					if(node.id === new_node_id) {
+						return Object.assign({}, node, {
+							articles: Array.from(new Set([action.payload.article, ...node.articles]))
+						})
+					}
+					// 2、删除原来node中的article
+					if(node.id === old_node_id) {
+						var index = node.articles.findIndex((article) => {
+							if(article_id === article.id) {
+								return true;
+							}
+							return false;
+						})
+						if(index >= 0) {
+							node.articles.splice(index, 1);
+							return Object.assign({}, node, {
+								articles: node.articles
+							})
+						}
+					}
+					return node;
+				})
+			});
+		}
 }

@@ -13,7 +13,8 @@ import {
 } from '../constants/address';
 
 import {
-	addTopicToNode
+	addTopicToNode,
+	updateTopicToNode
 } from './node';
 
 
@@ -91,8 +92,40 @@ export function postTopic(topic) {
 		.then((json) => {
 			if(!json.errors) {
 				dispatch(addTopic(json));
-				console.log("shifoufasheng", json["article"]["node_id"]);
 				dispatch(addTopicToNode(json["article"]["node_id"], json["article"]));
+			}else{
+				console.log("dddddddd-------------")
+			}
+		})
+	}
+}
+
+// 更新文章
+export function putTopic(id, topic) {
+	let node_id = topic["old_node_id"];
+	delete topic["old_node_id"]
+	console.log("putTopic", topic);
+	// node_id 原来的分类，topic.node_id 是要更新的分类
+	let token = localStorage.getItem('token');
+	return dispatch => {
+		dispatch(isFetching());
+		return fetch(`${TOPIC}/${id}`, {
+			method: 'put',
+			headers: new Headers({
+				'Content-Type': 'application/json; charset=utf-8',
+				Accept: 'application/json',
+				Authorization: `Token token=${token}`
+			}),
+			body: JSON.stringify({
+				article: topic
+			})
+		})
+		.then(response => response.json())
+		.then((json) => {
+			if(!json.errors) {
+				//更新单个文章
+				dispatch(updateTopic(node_id, json));
+				dispatch(updateTopicToNode(node_id, json["article"]));
 			}else{
 				console.log("dddddddd-------------")
 			}
@@ -132,13 +165,24 @@ export function addTopic(topic) {
 	}
 }
 
+// 更改单个文章
+export function updateTopic(old_node, topic) {
+	return {
+		type: "update_topic",
+		payload: {
+			old_node: old_node,
+			article: topic["article"]
+		}
+	}
+}
+
 export function isFetching() {
 		return {
 			type: TOPIC_FETCHING
 		}
 }
 
-export function isSuccess(status) {
+export function isSucc(status) {
 	return {
 		type: "is_success",
 		payload: {
