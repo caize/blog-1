@@ -1,6 +1,7 @@
 // restful url
-export const DOMAIN_EX = "http://localhost:3000";
-const DOMAIN = "http://localhost:3000";
+export const DOMAIN_EX = process.env.NODE_ENV === "production" ? "http://api.zero-to-one.cn" : "http://localhost:3000";
+const DOMAIN = process.env.NODE_ENV === "production" ? "http://api.zero-to-one.cn" : "http://localhost:3000";
+
 const URL = "/v1/";
 const MAIN = DOMAIN + URL;
 
