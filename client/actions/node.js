@@ -1,4 +1,3 @@
-import fetch from "isomorphic-fetch";
 import {
 	NODE_INDEX,
 	NODE_CREATE,
@@ -15,127 +14,90 @@ import {
 } from "../constants/types";
 import {
 	NODES,
-	NODE
+	NODE,
+	http_get_request,
+	http_post_request,
+	http_put_request,
+	http_delete_request
 } from '../constants/address';
 
 // 得到分类列表
 export function fetchNodes(page = 0) {
-	let token = localStorage.getItem('token');
 	return (dispatch, getState) => {
 		let state = getState();
 		if (state.nodes.nodes.length > 0) {
 			return {};
 		} else {
 			dispatch(requestNodes());
-			return fetch(NODES + `?page=${page}`, {
-					method: 'get',
-					headers: new Headers({
-						'Content-Type': 'application/json; charset=utf-8',
-						Accept: 'application/json',
-						Authorization: `Token token=${token}`
-					})
-				})
-				.then(response => response.json())
-				.then((json) => {
-					dispatch(receiveNodes(json))
-				});
+			return http_get_request(NODES).then((json) => {
+				dispatch(receiveNodes(json))
+			});
 		}
 	}
 }
 
 // 创建分类
 export function postNode(title, summary, imageId) {
-	let token = localStorage.getItem('token');
 	return function(dispatch) {
-		return fetch(NODES, {
-				method: 'post',
-				headers: new Headers({
-					'Content-Type': 'application/json; charset=utf-8',
-					Accept: 'application/json',
-					Authorization: `Token token=${token}`
-				}),
-				body: JSON.stringify({
-					node: {
-						title: title,
-						summary: summary,
-						image_id: imageId
-					}
-				})
-			})
-			.then(response => response.json())
-			.then((json) => {
-				console.log('postNode json init', json)
-				if (typeof(json["errors"]) !== 'undefined') {
-					dispatch(nodeError(json["errors"]))
-				} else {
-					dispatch(pushNode(json));
-					dispatch(nodeError({}));
-					dispatch(nodeSuccess('success'));
-				}
-			})
+		let body = JSON.stringify({
+			node: {
+				title: title,
+				summary: summary,
+				image_id: imageId
+			}
+		});
+		return http_post_request(NODES, body).then((json) => {
+			console.log('postNode json init', json)
+			if (typeof(json["errors"]) !== 'undefined') {
+				dispatch(nodeError(json["errors"]))
+			} else {
+				dispatch(pushNode(json));
+				dispatch(nodeError({}));
+				dispatch(nodeSuccess('success'));
+			}
+		})
 	}
 }
 
 // 更新分类
 export function putNode(id, title, summary, imageId) {
-	let token = localStorage.getItem('token');
+	let body = JSON.stringify({
+		node: {
+			title: title,
+			summary: summary,
+			image_id: imageId
+		}
+	});
 	return function(dispatch) {
-		return fetch((NODES + `/${id}`), {
-				method: 'put',
-				headers: new Headers({
-					'Content-Type': 'application/json; charset=utf-8',
-					Accept: 'application/json',
-					Authorization: `Token token=${token}`
-				}),
-				body: JSON.stringify({
-					node: {
-						title: title,
-						summary: summary,
-						image_id: imageId
-					}
-				})
-			})
-			.then(response => response.json())
-			.then((json) => {
-				console.log('updateNode json init', json)
-				if (typeof(json["errors"]) !== 'undefined') {
-					dispatch(nodeError(json["errors"]));
-				} else {
-					dispatch(updateNode(json));
-					dispatch(nodeError({}));
-					dispatch(nodeSuccess('success'));
-				}
-			})
+		return http_put_request((NODES + `/${id}`), body).then((json) => {
+			console.log('updateNode json init', json)
+			if (typeof(json["errors"]) !== 'undefined') {
+				dispatch(nodeError(json["errors"]));
+			} else {
+				dispatch(updateNode(json));
+				dispatch(nodeError({}));
+				dispatch(nodeSuccess('success'));
+			}
+		})
 	}
 }
 
 // 删除分类
 export function deleteNode(id) {
-	let token = localStorage.getItem('token');
 	return function(dispatch) {
-		return fetch((NODES + `/${id}`), {
-				method: 'delete',
-				headers: new Headers({
-					'Content-Type': 'application/json; charset=utf-8',
-					Accept: 'application/json',
-					Authorization: `Token token=${token}`
-				})
-			})
-			.then(response => response.json())
-			.then((json) => {
-				console.log('deleteNode json init', json)
-				if (typeof(json["error"]) !== 'undefined') {
-					console.log("deleteNode json", json);
-				} else {
-					dispatch(removeNode(json))
-				}
-			})
+		return http_delete_request((NODES + `/${id}`)).then((json) => {
+			console.log('deleteNode json init', json)
+			if (typeof(json["error"]) !== 'undefined') {
+				console.log("deleteNode json", json);
+			} else {
+				dispatch(removeNode(json))
+			}
+		})
 	}
 }
 
 // 得到一个分类
 export function fetchNode(id) {
-	let token = localStorage.getItem('token');
 	return function(dispatch, getState) {
 		dispatch(requestNodes())
 		let state = getState();
@@ -148,22 +110,14 @@ export function fetchNode(id) {
 		if (node.node !== undefined) {
 			return dispatch(receiveNode(node));
 		} else {
-			return fetch(`${NODES}/${id}`, {
-					method: 'get',
-					headers: new Headers({
-						'Content-Type': 'application/json; charset=utf-8',
-						Accept: 'application/json',
-						Authorization: `Token token=${token}`
-					})
-				}).then(response => response.json())
-				.then((json) => {
-					if (json.error !== "Not Found") {
-						dispatch(receiveNode(json));
-					} else {
-						dispatch(fetchNodeError("没有找到"));
-						////////  处理错误 代写
-					}
-				})
+			return http_get_request(`${NODES}/${id}`).then((json) => {
+				if (json.error !== "Not Found") {
+					dispatch(receiveNode(json));
+				} else {
+					dispatch(fetchNodeError("没有找到"));
+					////////  处理错误 代写
+				}
+			})
 		}
 	}
 }

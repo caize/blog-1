@@ -5,51 +5,49 @@ import React, {
 import Simditor from 'simditor';
 import css from 'simditor/styles/simditor.scss';
 import {
-	grey400
+  grey400
 } from 'material-ui/styles/colors';
 
 const styles = {
-      root: {
-        fontSize: 16,
-        lineHeight: '24px',
-        width: '100%',
-        display: 'block',
-        position: 'relative',
-        // backgroundColor: backgroundColor,
-        // fontFamily: this.state.muiTheme.rawTheme.fontFamily,
-        marginTop: 10
-      },
-      floatingLabel: {
-        position: 'relative',
-        color: grey400,
-        marginBottom: 5,
-        lineHeight: '22px',
-        fontSize: '10px',
-        bottom: 'none',
-        opacity: 1,
-        cursor: 'text',
-        transform: 'scale(1) translate3d(0, 0, 0)',
-        transformOrigin: 'left top',
-        transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms'
-      },
-      error: {
-        position: 'relative',
-        bottom: 5,
-        fontSize: 12,
-        lineHeight: '12px',
-        color: 'red',
-        marginTop: 10,
-        // transition: Transitions.easeOut(),
-        transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms'
-      }
-    };
+  root: {
+    fontSize: 16,
+    lineHeight: '24px',
+    width: '100%',
+    display: 'block',
+    position: 'relative',
+    marginTop: 10
+  },
+  floatingLabel: {
+    position: 'relative',
+    color: grey400,
+    marginBottom: 5,
+    lineHeight: '22px',
+    fontSize: '10px',
+    bottom: 'none',
+    opacity: 1,
+    cursor: 'text',
+    transform: 'scale(1) translate3d(0, 0, 0)',
+    transformOrigin: 'left top',
+    transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms'
+  },
+  error: {
+    position: 'relative',
+    bottom: 5,
+    fontSize: 12,
+    lineHeight: '12px',
+    color: 'red',
+    marginTop: 10,
+    // transition: Transitions.easeOut(),
+    transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms'
+  }
+};
 
 class HtmlField extends Component {
   constructor(props) {
     super(props);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this._initEditor();
   }
 
@@ -84,7 +82,7 @@ class HtmlField extends Component {
     this.props.onBlur && this.props.onBlur(e);
   }
 
-  _initEditor(){
+  _initEditor() {
     if (!this._editor && this.refs.editor) {
       let {
         placeholder,
@@ -104,7 +102,7 @@ class HtmlField extends Component {
         allowedStyles,
         codeLanguages,
         locale,
-        } = this.props;
+      } = this.props;
       if (typeof locale !== 'undefined') {
         Simditor.locale = locale;
       }
@@ -141,7 +139,7 @@ class HtmlField extends Component {
       errorText,
       floatingLabelStyle,
       floatingLabelText,
-      } = this.props;
+    } = this.props;
 
     this._initEditor();
 

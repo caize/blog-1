@@ -1,5 +1,8 @@
 import fetch from "isomorphic-fetch";
 import {
+	token
+} from "../constants/auth";
+import {
 	LOGOUT,
 	LOGIN_ERROR,
 	LOGIN_USER,
@@ -8,12 +11,15 @@ import {
 import {
 	LOGIN_URL,
 	AUTHEN_URL,
-	REGISTER_URL
+	REGISTER_URL,
+	http_get_request,
+	http_post_request,
+	http_put_request,
+	http_delete_request
 } from '../constants/address';
 
 // 如果cookies中有登录信息从cookies中直接登录
 export function getAuth() {
-	let token = localStorage.getItem('token');
 	return function(dispatch, getState) {
 		let state = getState();
 		if (state.login.login_user.token) {
@@ -22,23 +28,14 @@ export function getAuth() {
 		if (!token) {
 			dispatch(logout())
 		}
-		return fetch(AUTHEN_URL, {
-				method: 'post',
-				headers: new Headers({
-					'Content-Type': 'application/json; charset=utf-8',
-					Accept: 'application/json',
-					Authorization: `Token token=${token}`
-				})
-			})
-			.then(response => response.json())
-			.then((json) => {
-				if (typeof(json["error"]) !== 'undefined') {
-					dispatch(logout())
-				} else {
-					dispatch(receiveUser(json["user"]))
-					dispatch(loginError({}))
-				}
-			})
+		return http_post_request(AUTHEN_URL, {}).then((json) => {
+			if (typeof(json["error"]) !== 'undefined') {
+				dispatch(logout())
+			} else {
+				dispatch(receiveUser(json["user"]))
+				dispatch(loginError({}))
+			}
+		})
 	}
 
 }
@@ -47,29 +44,21 @@ export function getAuth() {
 // 登录并且得到用户信息
 export function login(login, password) {
 	return function(dispatch) {
-		return fetch(LOGIN_URL, {
-				method: 'POST',
-				headers: new Headers({
-					'Content-Type': 'application/json; charset=utf-8',
-					Accept: 'application/json',
-				}),
-				body: JSON.stringify({
-					session: {
-						login: login,
-						password: password
-					}
-				})
-			})
-			.then(response => response.json())
-			.then((json) => {
-				if (typeof(json["error"]) !== 'undefined') {
-					dispatch(loginError(json))
-					dispatch(logout())
-				} else {
-					dispatch(receiveUser(json["user"]))
-					dispatch(loginError({}))
-				}
-			})
+		let body = JSON.stringify({
+			session: {
+				login: login,
+				password: password
+			}
+		});
+		return http_post_request(LOGIN_URL, body).then((json) => {
+			if (typeof(json["error"]) !== 'undefined') {
+				dispatch(loginError(json))
+				dispatch(logout())
+			} else {
+				dispatch(receiveUser(json["user"]))
+				dispatch(loginError({}))
+			}
+		})
 	}
 }
 
@@ -77,31 +66,23 @@ export function login(login, password) {
 // 注册用户
 export function register(username, email, name, password) {
 	return function(dispatch) {
-		return fetch(REGISTER_URL, {
-				method: 'POST',
-				headers: new Headers({
-					'Content-Type': 'application/json; charset=utf-8',
-					Accept: 'application/json',
-				}),
-				body: JSON.stringify({
-					user: {
-						username: username,
-						email: email,
-						name: name,
-						password: password
-					}
-				})
-			})
-			.then(response => response.json())
-			.then((json) => {
-				if (typeof(json["errors"]) !== 'undefined') {
-					dispatch(regError(json["errors"]))
-					dispatch(logout())
-				} else {
-					dispatch(receiveUser(json["user"]))
-					dispatch(regError({}))
-				}
-			})
+		let body = JSON.stringify({
+			user: {
+				username: username,
+				email: email,
+				name: name,
+				password: password
+			}
+		});
+		return http_post_request(REGISTER_URL, body).then((json) => {
+			if (typeof(json["errors"]) !== 'undefined') {
+				dispatch(regError(json["errors"]))
+				dispatch(logout())
+			} else {
+				dispatch(receiveUser(json["user"]))
+				dispatch(regError({}))
+			}
+		})
 	}
 }
 

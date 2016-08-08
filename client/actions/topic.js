@@ -1,4 +1,3 @@
-import fetch from "isomorphic-fetch";
 import {
 	TOPIC_INDEX,
 	TOPIC_CREATE,
@@ -9,7 +8,11 @@ import {
 } from "../constants/types";
 import {
 	TOPICS,
-	TOPIC
+	TOPIC,
+	http_get_request,
+	http_post_request,
+	http_put_request,
+	http_delete_request
 } from '../constants/address';
 
 import {
@@ -20,26 +23,16 @@ import {
 
 // 得到文章列表
 export function fetchTopics() {
-	let token = localStorage.getItem('token');
 	return function(dispatch) {
 		dispatch(isFetching());
-		return fetch(TOPICS, {
-				method: 'get',
-				headers: new Headers({
-					'Content-Type': 'application/json; charset=utf-8',
-					Accept: 'application/json',
-					Authorization: `Token token=${token}`
-				})
-			}).then(response => response.json())
-			.then((json) => {
-				dispatch(receiveTopics(json));
-			})
+		return http_get_request(TOPICS).then((json) => {
+			dispatch(receiveTopics(json));
+		})
 	}
 }
 
 // 查看单个文章
 export function fetchTopic(id) {
-	let token = localStorage.getItem('token');
 	return function(dispatch, getState) {
 		let state = getState();
 		let topic = {};
@@ -52,48 +45,29 @@ export function fetchTopic(id) {
 			return dispatch(receiveTopic(topic));
 		} else {
 			dispatch(isFetching());
-			return fetch(`${TOPIC}/${id}`, {
-					method: 'get',
-					headers: new Headers({
-						'Content-Type': 'application/json; charset=utf-8',
-						Accept: 'application/json',
-						Authorization: `Token token=${token}`
-					})
-				}).then(response => response.json())
-				.then((json) => {
-					if (json.error === undefined) {
-						dispatch(receiveTopic(json))
-					} else {
-
-						////////  处理错误 代写
-					}
-				})
+			return http_get_request(`${TOPIC}/${id}`).then((json) => {
+				if (json.error === undefined) {
+					dispatch(receiveTopic(json))
+				} else {
+					////////  处理错误 代写
+				}
+			})
 		}
 	}
 }
 
 // 新建文章
 export function postTopic(topic) {
-	let token = localStorage.getItem('token');
 	return dispatch => {
 		dispatch(isFetching());
-		return fetch(TOPICS, {
-			method: 'post',
-			headers: new Headers({
-				'Content-Type': 'application/json; charset=utf-8',
-				Accept: 'application/json',
-				Authorization: `Token token=${token}`
-			}),
-			body: JSON.stringify({
-				article: topic
-			})
-		})
-		.then(response => response.json())
-		.then((json) => {
-			if(!json.errors) {
+		let body = JSON.stringify({
+			article: topic
+		});
+		return http_post_request(TOPICS, body).then((json) => {
+			if (!json.errors) {
 				dispatch(addTopic(json));
 				dispatch(addTopicToNode(json["article"]["node_id"], json["article"]));
-			}else{
+			} else {
 				console.log("dddddddd-------------")
 			}
 		})
@@ -106,27 +80,17 @@ export function putTopic(id, topic) {
 	delete topic["old_node_id"]
 	console.log("putTopic", topic);
 	// node_id 原来的分类，topic.node_id 是要更新的分类
-	let token = localStorage.getItem('token');
 	return dispatch => {
 		dispatch(isFetching());
-		return fetch(`${TOPIC}/${id}`, {
-			method: 'put',
-			headers: new Headers({
-				'Content-Type': 'application/json; charset=utf-8',
-				Accept: 'application/json',
-				Authorization: `Token token=${token}`
-			}),
-			body: JSON.stringify({
-				article: topic
-			})
-		})
-		.then(response => response.json())
-		.then((json) => {
-			if(!json.errors) {
+		let body = JSON.stringify({
+			article: topic
+		});
+		return http_put_request(`${TOPIC}/${id}`, body).then((json) => {
+			if (!json.errors) {
 				//更新单个文章
 				dispatch(updateTopic(node_id, json));
 				dispatch(updateTopicToNode(node_id, json["article"]));
-			}else{
+			} else {
 				console.log("dddddddd-------------")
 			}
 		})
@@ -177,9 +141,9 @@ export function updateTopic(old_node, topic) {
 }
 
 export function isFetching() {
-		return {
-			type: TOPIC_FETCHING
-		}
+	return {
+		type: TOPIC_FETCHING
+	}
 }
 
 export function isSucc(status) {
