@@ -26,8 +26,20 @@ module.exports = {
 	module: {
 		loaders: [{
 			test: /\.js$/,
-			loaders: ['babel'],
-			include: path.join(__dirname, 'client')
+			loader: 'babel',
+			include: path.join(__dirname, 'client'),
+			query: {
+				presets: ['es2015', 'react'],
+				plugins: [
+					["react-transform", {
+						transforms: [{
+							transform: "react-transform-hmr",
+							imports: ["react"],
+							locals: ["module"]
+						}]
+					}]
+				]
+			}
 		}, {
 			test: /\.scss$/,
 			loader: 'style-loader!css-loader!postcss-loader!sass'
