@@ -32,15 +32,7 @@ module.exports = {
 			loader: 'babel',
 			include: path.join(__dirname, 'client'),
 			query: {
-				plugins: [
-					["react-transform", {
-						transforms: [{
-							transform: "react-transform-hmr",
-							imports: ["react"],
-							locals: ["module"]
-						}]
-					}]
-				]
+				presets: ['es2015', 'react']
 			}
 		}, {
 			test: /\.scss$/,
