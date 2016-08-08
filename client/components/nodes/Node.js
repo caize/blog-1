@@ -42,12 +42,16 @@ class Node extends Component {
 	}
 
 	deleteNode(id) {
-		let { deleteNode } = this.props;
+		let {
+			deleteNode
+		} = this.props;
 		deleteNode(id);
 	}
 
 	editNode(id) {
-		let { nodes } = this.props;
+		let {
+			nodes
+		} = this.props;
 		let node = nodes.find((val) => {
 			return val.id.toString() === id.toString()
 		});
@@ -65,7 +69,9 @@ class Node extends Component {
 	}
 
 	handleOpen() {
-		let { nodeError } = this.props;
+		let {
+			nodeError
+		} = this.props;
 		nodeError({});
 		this.setState({
 			open: true
@@ -87,7 +93,7 @@ class Node extends Component {
 			return <h3>还没有创建节点</h3>
 		}
 		return nodes.map((val) => {
-				return <NodeItem
+			return <NodeItem
 									{...this.props}
 									node={val}
 									editNode={this.editNode.bind(this)}
@@ -97,11 +103,14 @@ class Node extends Component {
 		})
 	}
 	render() {
-		const addNode = (this.props.admin ? <RaisedButton label="添加节点" onClick={this.addNode.bind(this)} primary={true} style={styles.button} /> : "");
+		let {
+			login_user
+		} = this.props;
+		const addNode = (login_user && login_user.admin ? <RaisedButton label="添加节点" onClick={this.addNode.bind(this)} primary={true} style={styles.button} /> : "");
 		return (
 			<div>
 				{addNode}
-				<List style={this.props.admin ? styles.list : styles.listC}>
+				<List style={login_user && login_user.admin ? styles.list : styles.listC}>
 					{ this.listNodes() }
 					<Modal node={this.state.node} open={this.state.open} handleClose={this.handleClose.bind(this)}/>
 				</List>
@@ -109,8 +118,10 @@ class Node extends Component {
 		)
 	}
 }
+
 function mapStateToProps(state) {
 	return {
+		login_user: state.login.login_user,
 		nodes: state.nodes.nodes
 	}
 }

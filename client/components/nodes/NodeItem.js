@@ -50,7 +50,8 @@ class NodeItem extends Component {
 
 	render() {
 		let {
-			node
+			node,
+			login_user
 		} = this.props;
 		const iconButtonElement = (
 			<IconButton
@@ -72,7 +73,7 @@ class NodeItem extends Component {
       </IconMenu>
 		);
 
-		if (this.props.admin) {
+		if (login_user && login_user.admin) {
 			return (
 				<ListItem
 						leftAvatar={<Avatar icon={<FileFolder />}
@@ -99,19 +100,28 @@ class NodeItem extends Component {
 			/>
 		)
 	} else {
-		return (
-			<ListItem
-				leftAvatar={
-					<Avatar icon={<FileFolder />}
-					src={DOMAIN_EX + node.image_url} />}
-				primaryText = {node.title}
-				secondaryText = {node.summary}
-				secondaryTextLines = {2}
-				onTouchTap = {this.redirectToArticles.bind(this, node.id)}
-				key = {node.id}
-		/>
-	)
-}
+		return ( < ListItem leftAvatar = {
+				<Avatar icon={<FileFolder />}
+					src={DOMAIN_EX + node.image_url} />
+			}
+			primaryText = {
+				node.title
+			}
+			secondaryText = {
+				node.summary
+			}
+			secondaryTextLines = {
+				2
+			}
+			onTouchTap = {
+				this.redirectToArticles.bind(this, node.id)
+			}
+			key = {
+				node.id
+			}
+			/>
+		)
+	}
 
 }
 }
