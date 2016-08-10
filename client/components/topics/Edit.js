@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+import React, {
+	Component
+} from 'react';
 
 import {
 	connect
@@ -18,8 +20,8 @@ import {
 
 import {
 	putTopic,
-  fetchTopic,
-  isSucc
+	fetchTopic,
+	isSucc
 } from "../../actions/topic";
 
 import DefaultEditor from './DefaultEditor';
@@ -45,8 +47,8 @@ const styles = {
 	},
 }
 class TopicEdit extends Component {
-  constructor(props){
-    super(props)
+	constructor(props) {
+		super(props)
 		this.state = {
 			node_val: '',
 			title: '',
@@ -55,20 +57,20 @@ class TopicEdit extends Component {
 			titleErro: '',
 			node_valErro: ''
 		};
-  }
+	}
 
-  componentDidMount(){
+	componentDidMount() {
 		let {
 			params,
 			fetchTopic,
 			fetchNodes,
-      article
+			article
 		} = this.props;
-    fetchNodes();
-    if(params) {
-  		fetchTopic(params.id);
-    }
-  }
+		fetchNodes();
+		if (params) {
+			fetchTopic(params.id);
+		}
+	}
 
 	_handleChange(event, index, value) {
 		this.setState({
@@ -78,18 +80,21 @@ class TopicEdit extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-    if(nextProps.topics.article && !this.state.node_val) {
-      this.setState({
-        body: nextProps.topics.article.body,
-        node_val: nextProps.topics.article.node_id
-      })
-    }
-    if(nextProps.topics.isSuccess==="success") {
-      let { isSucc } = this.props;
-      isSucc('');
-      let redirect_url = `/articles/${nextProps.topics.article.id}`;
-      browserHistory.push(redirect_url);
-    }
+		console.log("nextProps", nextProps)
+		if (nextProps.article && !this.state.node_val) {
+			this.setState({
+				body: nextProps.article.body,
+				node_val: nextProps.article.node_id
+			})
+		}
+		if (nextProps.isSuccess === "success") {
+			let {
+				isSucc
+			} = this.props;
+			isSucc('');
+			let redirect_url = `/articles/${nextProps.article.id}`;
+			browserHistory.push(redirect_url);
+		}
 	}
 
 	handleEditorChange(value) {
@@ -100,53 +105,71 @@ class TopicEdit extends Component {
 	}
 
 	submitFrom() {
-		let {node_val, body} = this.state;
+		let {
+			node_val,
+			body
+		} = this.state;
 		let title = this.refs.title.getValue();
-    let { article } = this.props;
-    let node_id = node_val || article.node_id;
+		let {
+			article
+		} = this.props;
+		let node_id = node_val || article.node_id;
 		let error = false;
-		if(!title) {
-				error = true;
-				this.setState({
-					titleErro: "不能为空"
-				});
+		if (!title) {
+			error = true;
+			this.setState({
+				titleErro: "不能为空"
+			});
 		}
-		if(!body) {
+		if (!body) {
 			error = true;
 			this.setState({
 				bodyErro: "不能为空"
 			});
 		}
-		if(!node_id) {
+		if (!node_id) {
 			error = true;
 			this.setState({
 				node_valErro: "不能为空"
 			})
 		}
-		if(!error) {
-			let { putTopic } = this.props;
-			putTopic(article.id, {title: title, body: body, node_id: node_id, old_node_id: article.node_id});
+		if (!error) {
+			let {
+				putTopic
+			} = this.props;
+			putTopic(article.id, {
+				title: title,
+				body: body,
+				node_id: node_id,
+				old_node_id: article.node_id
+			});
 		}
 
 	}
 
 	_handleInputChange() {
-			this.setState({
-				titleErro: ""
-			});
+		this.setState({
+			titleErro: ""
+		});
 	}
 
-  render() {
+	render() {
 		let {
-			article
+			article,
+			login_user,
+			nodes,
+			is_fetching
 		} = this.props;
-		let { node_valErro, titleErro, bodyErro } = this.state;
-		let { nodes, is_fetching } = this.props;
-    if(!this.props.loggedIn || Object.keys(article).length == 0) {
-      return <div></div>
-    }
-    return(
-      <Paper zDepth={1} style={styles.article}>
+		let {
+			node_valErro,
+			titleErro,
+			bodyErro
+		} = this.state;
+		if (!(login_user && login_user.username === article.author_username) || Object.keys(article).length == 0) {
+			return <div></div>
+		}
+		return (
+			<Paper zDepth={1} style={styles.article}>
         编辑文章
         <NodeList
           nodes={nodes}
@@ -182,8 +205,8 @@ class TopicEdit extends Component {
 					disabled={is_fetching}
 					/>
       </Paper>
-    )
-  }
+		)
+	}
 }
 
 function mapStateToProps(state) {
@@ -191,6 +214,8 @@ function mapStateToProps(state) {
 		article: state.topics.article,
 		nodes: state.nodes.nodes,
 		is_fetching: state.topics.isFetching,
+		login_user: state.login.login_user,
+		isSuccess: state.topics.isSuccess
 	}
 }
 
@@ -205,9 +230,9 @@ function mapDispatchToProps(dispatch) {
 		putTopic: (id, topic) => {
 			dispatch(putTopic(id, topic))
 		},
-    isSucc: (status) => {
-      dispatch(isSucc(status))
-    }
+		isSucc: (status) => {
+			dispatch(isSucc(status))
+		}
 	}
 }
 
