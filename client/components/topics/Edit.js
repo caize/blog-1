@@ -114,6 +114,7 @@ class TopicEdit extends Component {
 			article
 		} = this.props;
 		let node_id = node_val || article.node_id;
+		let body_html = body || article.body;
 		let error = false;
 		if (!title) {
 			error = true;
@@ -121,7 +122,7 @@ class TopicEdit extends Component {
 				titleErro: "不能为空"
 			});
 		}
-		if (!body) {
+		if (!body_html) {
 			error = true;
 			this.setState({
 				bodyErro: "不能为空"
@@ -173,7 +174,7 @@ class TopicEdit extends Component {
         编辑文章
         <NodeList
           nodes={nodes}
-          defaultValue={this.state.node_val}
+          defaultValue={this.state.node_val || article.node_id}
           onChange={this._handleChange.bind(this)}
           errorText={node_valErro}
           />
