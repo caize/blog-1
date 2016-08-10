@@ -59,10 +59,10 @@ class TopicNew extends Component {
 	}
 
 	componentDidMount() {
-			let {
-				fetchNodes
-			} = this.props;
-			fetchNodes();
+		let {
+			fetchNodes
+		} = this.props;
+		fetchNodes();
 	}
 
 	_handleChange(event, index, value) {
@@ -75,7 +75,7 @@ class TopicNew extends Component {
 	componentWillReceiveProps(nextProps) {
 		let new_articles = nextProps.topics.articles;
 		let old_articles = this.props.topics.articles;
-		if(new_articles.length > old_articles.length) {
+		if (new_articles.length > old_articles.length) {
 			browserHistory.push(`/articles/${new_articles[0].id}`);
 		}
 	}
@@ -88,45 +88,64 @@ class TopicNew extends Component {
 	}
 
 	submitFrom() {
-		let {node_val, body} = this.state;
+		let {
+			node_val,
+			body
+		} = this.state;
 		let title = this.refs.title.getValue();
 		let error = false;
-		if(!title) {
-				error = true;
-				this.setState({
-					titleErro: "不能为空"
-				});
+		if (!title) {
+			error = true;
+			this.setState({
+				titleErro: "不能为空"
+			});
 		}
-		if(!body) {
+		if (!body) {
 			error = true;
 			this.setState({
 				bodyErro: "不能为空"
 			});
 		}
-		if(!node_val) {
+		if (!node_val) {
 			error = true;
 			this.setState({
 				node_valErro: "不能为空"
 			})
 		}
 
-		if(!error) {
-			let { postTopic } = this.props;
-			postTopic({title: title, body: body, node_id: node_val});
+		if (!error) {
+			let {
+				postTopic
+			} = this.props;
+			postTopic({
+				title: title,
+				body: body,
+				node_id: node_val
+			});
 		}
 
 	}
 
 	_handleInputChange() {
-			this.setState({
-				titleErro: ""
-			});
+		this.setState({
+			titleErro: ""
+		});
 	}
 
 	render() {
-		let { node_val, node_valErro, titleErro, body, bodyErro } = this.state;
-		let { nodes, login_user, is_fetching } = this.props;
-		if(!login_user || !login_user.token) {
+		let {
+			node_val,
+			node_valErro,
+			titleErro,
+			body,
+			bodyErro
+		} = this.state;
+		let {
+			nodes,
+			login_user,
+			is_fetching
+		} = this.props;
+		if (!login_user || !login_user.token) {
 			return <Paper zDepth={1} style={styles.article}><div>请返回主页面</div></Paper>;
 		}
 		return (
@@ -173,7 +192,8 @@ function mapStateToProps(state) {
 	return {
 		nodes: state.nodes.nodes,
 		login_user: state.login.login_user,
-		is_fetching: state.topics.isFetching
+		is_fetching: state.topics.isFetching,
+		topics: state.topics
 	}
 }
 

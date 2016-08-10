@@ -80,7 +80,6 @@ class TopicEdit extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		console.log("nextProps", nextProps)
 		if (nextProps.article && !this.state.node_val) {
 			this.setState({
 				body: nextProps.article.body,
