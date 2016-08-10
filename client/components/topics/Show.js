@@ -61,9 +61,10 @@ class TopicShow extends Component {
 	}
 	render() {
 		let {
-			article
+			article,
+			login_user
 		} = this.props;
-		const editor = this.props.loggedIn ? <span><Link style={{color: "rgba(0,0,0,0.4)", textDecoration: 'underline'}} to={`/articles/${article.id}/edit`}>编辑</Link>  ·</span> : ''
+		const editor = login_user && login_user.username === article.author_username ? <span><Link style={{color: "rgba(0,0,0,0.4)", textDecoration: 'underline'}} to={`/articles/${article.id}/edit`}>编辑</Link>  ·</span> : ''
 		const paperArticle = article.title === undefined ? (
 			<h3>没有该文章，请返回继续查看</h3>
 		) : (
@@ -87,6 +88,7 @@ class TopicShow extends Component {
 
 function mapStateToProps(state) {
 	return {
+		login_user: state.login.login_user,
 		article: state.topics.article
 	}
 }
